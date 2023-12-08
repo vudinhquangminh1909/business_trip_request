@@ -1,0 +1,16 @@
+/* toastr.css */
+.toast-success {
+    background-color: #4CAF50;
+    /* Màu nền cho thông báo thành công */
+    color: white;
+    /* Màu chữ cho thông báo thành công */
+}
+
+.toast-error {
+    background-color: #F44336;
+    /* Màu đỏ cho thông báo lỗi */
+    color: #FFFFFF;
+    /* Màu chữ trắng */
+}
+
+/* Định dạng cho các loại thông báo khác tùy theo nhu cầu của bạn */

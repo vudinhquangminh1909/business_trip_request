@@ -1,0 +1,314 @@
+<div class="card">
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container-fluid">
+            <h3><b>BUSINESS TRIP REQUEST</b></h3>
+            <div class="d-flex">
+                <button class="btn btn-primary me-2" [disabled]="isButtonDisabled_save" (click)="Save()">Save</button>
+                <button class="btn btn-primary me-2" [disabled]="parentForm.invalid "
+                    (click)="check_data_form(); Submit()">Submit</button>
+                <button class="btn btn-dark me-2" (click)="Submit()" type="submit">Back</button>
+            </div>
+        </div>
+    </nav>
+    <div class="app m-2" style="margin: 0rem 1rem;">
+        <form [formGroup]="parentForm" class="row needs-validation">
+            <div class="col-md-4 mt-2">
+                <label for="operaterName" class="form-label"><b>Operater's Name</b></label>
+                <input style="height: 2.5rem;" class="form-control" formControlName="operaterName" type="text">
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label for="requestNumber" class="form-label"><b>Request Number</b></label>
+                <input style="height: 2.5rem;" type="text" class="form-control" formControlName="requestNumber">
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label for="requestedDate" class="form-label"><b>Requested Date</b></label>
+                <input style="height: 2.5rem;" type="datetime-local" class="form-control"
+                    formControlName="requestedDate">
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label for="legalID" class="form-label"><b>Legal Entity</b><span
+                        class="ms-1 text-danger">*</span></label>
+                <select class="form-control" formControlName="legalID">
+                    <option *ngFor="let LegalEntity of interface_LegalEntity" [ngValue]="LegalEntity.id">
+                        {{LegalEntity.code}} - {{LegalEntity.description}}
+                    </option>
+                </select>
+                <!-- <input class="form-control" formControlName="legalID" type="number" name="" id=""> -->
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label for="departmentID" class="form-label"><b>Department</b><span
+                        class="ms-1 text-danger">*</span></label>
+                <select class="form-control" formControlName="departmentID">
+                    <option *ngFor="let Department of interface_Department" [ngValue]="Department.id">
+                        {{Department.code}} - {{Department.description}}
+                    </option>
+                </select>
+
+                <!-- <input class="form-control" formControlName="departmentID" type="number" name="" id=""> -->
+
+            </div>
+
+
+            <div class="col-md-4 mt-2">
+                <label for="verifierUsername" class="form-label"><b>Traveler's/Verifier's Username</b></label> <span
+                    class="ms-1 text-danger">*</span>
+                <select style="height: 2.5rem;" class="form-control" formControlName="verifierUsername"
+                    class="form-select white" aria-label="Default select example">
+                    <option selected>gaku@navigosgroup.com</option>
+                    <option selected>Zanba</option>
+                </select>
+
+                <!-- <input class="form-control" formControlName="verifierUsername" type="text" name="" id=""> -->
+
+            </div>
+
+            <div class="col-md-4 mt-2">
+
+                <label for="" class="form-label"><b>Expense Code</b></label> <span class="ms-1 text-danger">*</span>
+                <select style="height: 2.5rem;" class="form-control" formControlName="expenseCodeID"
+                    asp-for="interface_category_ExpenseCode" class="form-select white auto-complete-select"
+                    data-autocomplete-value-property="id" aria-label="Default select example">
+                    <option *ngFor="let ExpenseCode of interface_ExpenseCode" [value]="ExpenseCode.id">
+                        {{ExpenseCode.code}} - {{ExpenseCode.description}}
+                    </option>
+                </select>
+
+                <!-- <input class="form-control" formControlName="expenseCodeID" type="number" name="" id=""> -->
+
+            </div>
+
+            <div class="col-md-4 mt-2">
+                <label for="" class="form-label "><b>Business Type</b></label> <span class="ms-1 text-danger">*</span>
+                <select style="height: 2.5rem;" class="form-control" formControlName="businessType"
+                    class="form-select white" aria-label="Default select example">
+                    <option selected>Chọn nội dung 1</option>
+                    <option selected>Chọn nội dung 2</option>
+                </select>
+
+                <!-- <input class="form-control" formControlName="businessType" type="text" name="" id=""> -->
+
+            </div>
+
+
+            <div class="col-md-4 mt-2">
+                <label for="" class="form-label"><b>Traveler's/Verifier's Username</b></label> <span
+                    class="ms-1 text-danger">*</span>
+                <input style="height: 2.5rem;" class="form-control" formControlName="verifierName" type="text">
+            </div>
+
+            <div class="mb-3 mt-2">
+                <label for="" class="form-label"><b>Notes</b> <i>(Max 999 charachers)</i></label>
+                <textarea style="height: 4.875rem;" class="form-control white" formControlName="notes" id=""
+                    rows="1"></textarea>
+            </div>
+
+            <div class="app_component my-0">
+                <h3 class="bg-body-tertiary  text-dark"><b>PART 2: TRIP EXPENSES</b></h3>
+                <div class="d-flex bd-highlight mb-2">
+
+                    <label for="" class="flex-grow-1 bd-highlight form-label">
+                        <b>Total Amount: </b>
+                        <input [value]="calculateTotalEquivalentInVNDForAllTables()" class="form-control"
+                            formControlName="total" type="number" width="20px" readonly>
+                    </label>
+
+                    <div (click)="addTripExpense()" class="bd-highlight btn btn-primary mx-1"
+                        style="height: 20%; margin-top: 1.2rem" type="submit">
+                        Add new trip
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <button type="button" class="btn btn-primary" (click)="addTripExpense()">Thêm Form Con</button> -->
+
+            <div formArrayName="tripExpenses">
+                <ng-container *ngFor="let tripExpense of tripExpenses.controls; let i = index">
+                    <div [formGroupName]="i" class="form-con">
+                        <div class="d-flex  justify-content-between bg-body-tertiary">
+                            <h4>Trip {{ i + 1 }}</h4>
+                            <div (click)="removetripExpense(i)"><i class="px-2 fa fa-trash cursor blue"
+                                    aria-hidden="true"></i></div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="purpose" class="form-label"><b>Purpose</b><span
+                                        class="ms-1 text-danger">*</span><i>(Max 3999 charachers)</i></label>
+                                <textarea formControlName="purpose" class="form-control white" rows="3"></textarea>
+                            </div>
+
+                            <div class="col">
+                                <label for="destination" class="form-label"><b>Destination</b><span
+                                        class="ms-1 text-danger">*</span><i>(Max 3999 charachers)</i></label>
+                                <textarea formControlName="destination" class="form-control white" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex-colum-text d-flex justify-content-around mt-2">
+                            <div class="col-md-4 mx-1">
+                                <label for="" class="form-label"><b>Check-in time</b></label> <span
+                                    class="ms-1 text-danger mx-1">*</span>
+                                <span>(dd-mm-yyy)</span>
+                                <input formControlName="checkIn" type="datetime-local" class="form-control white"
+                                    (change)="calculateTotalNights(i)">
+                            </div>
+
+                            <div class="col-md-4 ">
+                                <label for="" class="form-label"><b>Check-out time</b></label> <span
+                                    class="ms-1 text-danger mx-1">*</span>
+                                <span>(dd-mm-yyy)</span>
+                                <input formControlName="checkOut" type="datetime-local" class="form-control white"
+                                    (change)="calculateTotalNights(i)">
+                            </div>
+
+                            <div class="col-md-4 mx-1">
+                                <label for="totalNight" class="form-label"><b>Total nights</b></label>
+                                <input formControlName="totalNight" type="number" class="form-control white"
+                                    placeholder="0 night">
+                            </div>
+                        </div>
+
+
+                        <div formArrayName="tripItems">
+                            <ng-container *ngFor="let tripItem of getTripItems(tripExpense).controls; let j = index">
+                                <div [formGroupName]="j" class="form-chau">
+                                    <h3>
+
+                                        <!-- <button type="button" class="btn btn-danger"
+                                        (click)="removeTripItem(i, j)">Xóa</button> -->
+                                    </h3>
+
+                                    <table class="table table-bordered" style="margin-bottom: 0rem;">
+                                        <thead class="center">
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">Item
+                                                    <span class="red">*</span><br><i>(Max 999 characters)</i>
+                                                </th>
+                                                <th scope="col">Specification <br><i>(Max 999
+                                                        characters)</i></th>
+                                                <th scope="col">Original Currency<span class="red">*</span>
+                                                </th>
+                                                <th scope="col">Original Unit<span class="red">*</span>
+                                                </th>
+                                                <th scope="col">Volume<span class="red">*</span></th>
+                                                <th scope="col">ORIGINAL_AMOUNT</th>
+                                                <th scope="col">Equivalent in VND</th>
+                                                <th scope="col">Notes<br><i>(Max 999 characters)</i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                    <div href=""><i (click)="removeTripItem(i, j)"
+                                                            class="fa fa-trash cursor blue" aria-hidden="true"></i>
+                                                    </div>
+                                                </th>
+
+                                                <td><textarea formControlName="item" class="form-control white"
+                                                        rows="3"></textarea>
+                                                </td>
+
+                                                <td><textarea formControlName="specification" class="form-control white"
+                                                        rows="3"></textarea></td>
+
+                                                <td>
+                                                    <select formControlName="originalCurrency" class="form-select white"
+                                                        style="width: 8rem;">
+                                                        <option *ngFor="let currency of interface_currency"
+                                                            [value]="currency.code">
+                                                            {{currency.code}}</option>
+                                                    </select>
+                                                </td>
+
+                                                <td>
+                                                    <input formControlName="originalUnit" type="number"
+                                                        (input)="limitToTwoDecimalPlaces($event)"
+                                                        class="form-control white" value="">
+                                                </td>
+
+                                                <td>
+                                                    <input formControlName="volume" type="number"
+                                                        (input)="limitToTwoDecimalPlaces($event)"
+                                                        class="form-control white" value="">
+                                                </td>
+
+                                                <td>
+                                                    <input formControlName="originalAmount" type="number"
+                                                        [ngModel]="calculateTotalAmount(tripItem)"
+                                                        class="form-control white" readonly>
+                                                </td>
+
+
+                                                <td>
+                                                    <input formControlName="equivalentInVND" type="number"
+                                                        [ngModel]="calculate_Total_EQUIVALENT_IN_VND(tripItem)"
+                                                        class="form-control">
+                                                </td>
+                                                <td>
+                                                    <textarea formControlName="notes" class="form-control white"
+                                                        rows="3"></textarea>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </ng-container>
+
+
+                            <table class="table table-bordered" style="margin-bottom: 0rem;">
+                                <!-- <div style="margin-left: 71%; margin-top: 1%;"> -->
+                                <tbody>
+                                    <tr *ngIf="showTotalAmount | async">
+                                        <td style="width: 1.9%"></td>
+                                        <td style="width: 12.3%;"></td>
+                                        <td style="width: 12.45%;"></td>
+                                        <td style="width: 9.4%;"></td>
+                                        <td style="width: 12.5%;"></td>
+                                        <td style="width: 12.55%;"></td>
+                                        <td style="width: 13.7%;" class="Total_Amount_Width">Tổng số tiền</td>
+                                        <td style="width: 12.9%;" class="included_10_Width">
+                                            <input (input)="limitToTwoDecimalPlaces($event)"
+                                                [value]="calculate_Total_Equivalent_In_VND(i)" type="number"
+                                                class="form-control">
+                                        </td>
+                                        <td class="included_Width">Bao gồm 10% VAT</td>
+                                    </tr>
+                                </tbody>
+                                <!-- </div> -->
+                            </table>
+                        </div>
+
+                        <div class="bd-highlight  my-2">
+                            <button (click)="addTripItem(tripExpense)"
+                                class="p-2 bd-highlight btn btn-primary p-2 ms-10" type="submit">Add new detail</button>
+                        </div>
+                        <!-- <button type="button" class="btn btn-danger" (click)="removeTripExpense(i)">Xóa</button> -->
+                    </div>
+                </ng-container>
+            </div>
+        </form>
+
+        <div class="app11 card-header ">
+            <div class="bd-highlight mb-2 d-flex justify-content-end" style="margin-top: -0.6rem;">
+                <button (click)="addTripExpense()" type="button" class="btn btn-primary">Add new trip</button>
+            </div>
+
+            <div class="app12 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary btn-sm" (click)="Save()"
+                    [disabled]="isButtonDisabled_save">Save</button>
+                <button type="button" class="btn btn-secondary btn-sm mx-1"
+                    [disabled]="parentForm.invalid || isSubmitClicked" (click)="check_data_form()"
+                    (click)="Submit()">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm">Back</button>
+            </div>
+        </div>
+    </div>
+</div>

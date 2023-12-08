@@ -1,0 +1,50 @@
+<div class="card" *ngIf="islisting">
+    <div class="card-header">
+        <div class="row">
+            <div class="col col-md-6">
+                <h5 class="card-title">
+                    View Business Trip
+                </h5>
+            </div>
+            <div class="text-end col col-md-6"></div>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        <ngx-datatable [rows]="interface_trip" default>
+
+            <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="150" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div ngbDropdown container="body" class="d-inline-block">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" ngbDropdownToggle>
+                            <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button ngbDropdownItem (click)="editBusinessTrip(row.id)">
+                                {{ '::Edit' | abpLocalization }}
+                            </button>
+                            <button ngbDropdownItem (click)="deteleTrip(row.id)">
+                                {{ '::Detele' | abpLocalization }}
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'::operaterName' | abpLocalization"
+                prop="operaterName"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::legalEntityDescription' | abpLocalization"
+                prop="legalEntityDescription"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::departmentDescription' | abpLocalization"
+                prop="departmentDescription"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::expenseCodeCode' | abpLocalization"
+                prop="expenseCodeCode"></ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+</div>
+<div class="mat-elevation-z8">
+    <router-outlet></router-outlet>
+</div>
